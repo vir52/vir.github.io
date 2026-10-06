@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vir</title>
+<style>
+*{margin:0;padding:0}
+body{
+  width:100vw;
+  height:100vh;
+  overflow:hidden;
+  background:#000;
+}
+#container{
+  width:100%;
+  height:100%;
+  position:relative;
+}
+.star{
+  position:absolute;
+  background:#fff;
+  border-radius:50%;
+}
+.meteor{
+  position:absolute;
+  height:2px;
+  background:linear-gradient(to right, #ffffff, transparent);
+  transform: rotate(-45deg);
+  transform-origin: left center;
+}
+</style>
+</head>
+<body>
+<div id="container">
+  <!-- 文字部分已经全部删除 -->
+</div>
+
+<script>
+const container = document.getElementById("container");
+
+function addBgStar(){
+  const el = document.createElement("div");
+  el.className = "star";
+  const s = Math.random()*1.8;
+  el.style.width = s+"px";
+  el.style.height = s+"px";
+  el.style.left = Math.random()*100+"vw";
+  el.style.top = Math.random()*100+"vh";
+  el.style.opacity = Math.random();
+  container.appendChild(el);
+}
+
+function addMeteor(){
+  const el = document.createElement("div");
+  el.className = "meteor";
+  const length = 70 + Math.random()*130;
+  const time = 0.7 + Math.random()*1.1;
+  el.style.width = length + "px";
+
+  const startX = window.innerWidth * 0.4 + Math.random() * window.innerWidth * 0.6;
+  const startY = Math.random() * window.innerHeight * 0.35;
+  el.style.left = startX + "px";
+  el.style.top = startY + "px";
+
+  container.appendChild(el);
+
+  const startTime = performance.now();
+  function animate(now){
+    const passed = (now - startTime)/1000;
+    const progress = passed / time;
+    if(progress >= 1){
+      el.remove();
+      return;
+    }
+    const currentX = startX - progress * 350;
+    const currentY = startY + progress * 350;
+    el.style.left = currentX + "px";
+    el.style.top = currentY + "px";
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+}
+
+for(let i=0;i<400;i++) addBgStar();
+
+setInterval(addMeteor, 1100);
+
+container.onclick = addMeteor;
+</script>
+</body>
+</html>
